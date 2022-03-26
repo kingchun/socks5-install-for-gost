@@ -13,7 +13,7 @@ apt install wget curl gzip -y ||yum install wget curl gunzip -y
 
 wget https://github.com/ginuerzh/gost/releases/download/v2.11.1/gost-linux-amd64-2.11.1.gz
 gzip gost-linux-amd64-2.11.1.gz
-mv gost-linux-amd64-2.11.1 /usr/local/bin/gost
+mv gost-linux-amd64-2.11.1.gz /usr/local/bin/gost
 chmod +x /usr/local/bin/gost
 
 echo -n "请输入socks5用户名:"                   # 参数-n的作用是不换行，echo默认换行
