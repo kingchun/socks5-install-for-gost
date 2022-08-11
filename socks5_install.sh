@@ -44,6 +44,8 @@ systemctl daemon-reload
 
 systemctl start gost.service
 
+systemctl enable gost.service
+
 echo "The installation is complete"
 }
 uninstall(){
