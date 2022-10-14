@@ -8,7 +8,7 @@ yellow='\033[0;33m'
 plain='\033[0m'
 
 install_gost(){
-apt update &&yum update
+apt update || yum update
 apt install wget curl gzip -y ||yum install wget curl gunzip -y
 
 wget https://github.com/ginuerzh/gost/releases/download/v2.11.1/gost-linux-amd64-2.11.1.gz
