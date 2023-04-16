@@ -1,4 +1,4 @@
-# !/bin/bash 
+#!/bin/bash 
 #默认安装在/usr/local/bin/gost
 #配置文件在/etc/systemd/system/gost.service
 #如果需要更换配置就卸载了重新安装就好了
@@ -65,6 +65,30 @@ else
 fi
 }
 info
+
+
+write_conf(){
+cat > gost.conf << EOF
+{
+  "services": [
+    {
+      "name": "service-0",
+      "addr": "${port}",
+      "handler": {
+        "type": "socks5",
+        "auth": {
+          "username": "${user}",
+          "password": "${passwd}"
+        }
+      },
+      "listener": {
+        "type": "tcp"
+      }
+    }
+  ]
+}
+EOF
+}
 
 echo -e "${green} ******************** ${plain}"
 echo -e "${green} 垃圾socks5一键安装脚本 ${plain}"
