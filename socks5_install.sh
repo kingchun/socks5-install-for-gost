@@ -45,6 +45,16 @@ systemctl start gost.service
 systemctl enable gost.service
 
 echo "The installation is complete"
+ip=$(curl ip.sb -4)
+echo "
+The installation is complete!
+Link information
+IP:${ip}
+PORT:${port}
+USER:${user}
+PASSWD:${passwd}
+"
+
 }
 uninstall(){
 systemctl stop gost.service
