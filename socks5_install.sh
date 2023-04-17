@@ -7,6 +7,9 @@ green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
+
+
+
 install_gost(){
 apt update || yum update
 apt install wget curl gzip jq -y ||yum install wget curl jq gunzip -y
@@ -50,9 +53,9 @@ echo "
 The installation is complete!
 Link information
 IP:${ip}
-PORT:${port}
-USER:${user}
-PASSWD:${passwd}
+Port:${port}
+User:${user}
+Passwd:${passwd}
 "
 
 }
@@ -65,7 +68,7 @@ echo "Uninstall complete"
 }
 
 function info(){
-systemctl list-units --type=service | grep gost
+ls /etc/systemd/system/ | grep gost.service > /dev/null
 install_status=$?
 if [ $install_status == 0 ]
 then
