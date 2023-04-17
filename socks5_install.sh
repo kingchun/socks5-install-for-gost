@@ -1,4 +1,4 @@
-# !/bin/bash 
+#!/bin/bash 
 #默认安装在/usr/local/bin/gost
 #配置文件在/etc/systemd/system/gost.service
 #如果需要更换配置就卸载了重新安装就好了
@@ -7,23 +7,24 @@ green='\033[0;32m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
+
+
+
 install_gost(){
 apt update || yum update
-apt install wget curl gzip -y ||yum install wget curl gunzip -y
+apt install wget curl gzip jq -y ||yum install wget curl jq gunzip -y
 
-wget https://github.com/ginuerzh/gost/releases/download/v2.11.1/gost-linux-amd64-2.11.1.gz
-gunzip gost-linux-amd64-2.11.1.gz || gzip gost-linux-amd64-2.11.1.gz
-mv gost-linux-amd64-2.11.1 /usr/local/bin/gost || mv gost-linux-amd64-2.11.1.gz /usr/local/bin/gost
+version_tmp=$(curl https://api.github.com/repos/ginuerzh/gost/releases/latest  | jq .tag_name -r)
+version=${version_tmp:1}
+wget https://github.com/ginuerzh/gost/releases/download/v${version}/gost-linux-amd64-${version}.gz --no-check-certificate
+file=$(ls | grep gost-linux-amd64-)
+gunzip ${file} || gzip ${file}
+mv gost-linux-amd64-${version} /usr/local/bin/gost || mv gost-linux-${version}.gz /usr/local/bin/gost
 chmod +x /usr/local/bin/gost
 
-echo -n "请输入socks5用户名:"                   # 参数-n的作用是不换行，echo默认换行
-read  user
-
-echo -n "请输入socks5密码:"                   # 参数-n的作用是不换行，echo默认换行
-read  passwd
-
-echo -n "请输入socks5端口:"                   # 参数-n的作用是不换行，echo默认换行
-read  port
+read -p "请输入socks5用户名:" user
+read -p "请输入socks5密码:" passwd
+read -p "请输入socks5端口:" port
 
 cat > /etc/systemd/system/gost.service << EOF
 [Unit]
@@ -47,6 +48,16 @@ systemctl start gost.service
 systemctl enable gost.service
 
 echo "The installation is complete"
+ip=$(curl ip.sb -4)
+echo "
+The installation is complete!
+Link information
+IP:${ip}
+Port:${port}
+User:${user}
+Passwd:${passwd}
+"
+
 }
 uninstall(){
 systemctl stop gost.service
@@ -56,12 +67,48 @@ systemctl daemon-reload
 echo "Uninstall complete"
 }
 
+function info(){
+ls /etc/systemd/system/ | grep gost.service > /dev/null
+install_status=$?
+if [ $install_status == 0 ]
+then
+   install_info="${green}installed${plain}"
+else
+   install_info="${red}not installed${plain}"
+fi
+}
+info
 
-echo -e "\033[0;32m ******************** \033[0m"
-echo -e "\033[0;32m 垃圾socks5一键安装脚本 \033[0m"
-echo -e "\033[0;32m ******************** \033[0m"
-echo -e "\033[0;32m 1安装gost \033[0m"
-echo -e "\033[0;32m 2卸载gost \033[0m"
+
+write_conf(){
+cat > gost.conf << EOF
+{
+  "services": [
+    {
+      "name": "service-0",
+      "addr": "${port}",
+      "handler": {
+        "type": "socks5",
+        "auth": {
+          "username": "${user}",
+          "password": "${passwd}"
+        }
+      },
+      "listener": {
+        "type": "tcp"
+      }
+    }
+  ]
+}
+EOF
+}
+
+echo -e "${green} ******************** ${plain}"
+echo -e "${green} 垃圾socks5一键安装脚本 ${plain}"
+echo -e "${green} ******************** ${plain}"
+echo -e "${green} 1安装gost ${plain}"
+echo -e "${green} 2卸载gost ${plain}"
+echo -e "${green}install status: ${install_info}${plain}"
 read  -p "请输入选项1或2:" xuanxiang
 ###根据选择执行那个函数###
 case $xuanxiang in
@@ -72,6 +119,6 @@ case $xuanxiang in
   uninstall
   ;;
  *)
-  echo -e "\033[0;31m 输入有毛病呀老铁 \033[0m"
+  echo -e "${red} 输入有毛病呀老铁 ${plain}"
   ;;
 esac
