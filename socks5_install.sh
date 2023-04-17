@@ -13,7 +13,7 @@ apt install wget curl gzip jq -y ||yum install wget curl jq gunzip -y
 
 version_tmp=$(curl https://api.github.com/repos/ginuerzh/gost/releases/latest  | jq .tag_name -r)
 version=${version_tmp:1}
-wget https://github.com/ginuerzh/gost/releases/download/${version}/gost-linux-amd64-${version}.gz --no-check-certificate
+wget https://github.com/ginuerzh/gost/releases/download/v${version}/gost-linux-amd64-${version}.gz --no-check-certificate
 file=$(ls | grep gost-linux-amd64-)
 gunzip ${file} || gzip ${file}
 mv gost-linux-amd64-${version} /usr/local/bin/gost || mv gost-linux-${version}.gz /usr/local/bin/gost
