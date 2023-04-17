@@ -19,9 +19,9 @@ gunzip ${file} || gzip ${file}
 mv gost-linux-amd64-${version} /usr/local/bin/gost || mv gost-linux-${version}.gz /usr/local/bin/gost
 chmod +x /usr/local/bin/gost
 
-read "请输入socks5用户名:" user
-read "请输入socks5密码:" passwd
-read "请输入socks5端口:" port
+read -p "请输入socks5用户名:" user
+read -p "请输入socks5密码:" passwd
+read -p "请输入socks5端口:" port
 
 cat > /etc/systemd/system/gost.service << EOF
 [Unit]
