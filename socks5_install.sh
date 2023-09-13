@@ -12,7 +12,7 @@ plain='\033[0m'
 
 install_gost(){
 apt update || yum update
-apt install wget curl gzip jq -y ||yum install wget curl jq gunzip -y
+apt install wget curl gzip jq -y ||yum install  epel-release wget curl jq gunzip -y
 
 version_tmp=$(curl https://api.github.com/repos/ginuerzh/gost/releases/latest  | jq .tag_name -r)
 version=${version_tmp:1}
