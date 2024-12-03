@@ -16,10 +16,10 @@ apt install wget curl gzip jq -y ||yum install  epel-release wget curl jq gunzip
 
 version_tmp=$(curl https://api.github.com/repos/ginuerzh/gost/releases/latest  | jq .tag_name -r)
 version=${version_tmp:1}
-wget https://github.com/ginuerzh/gost/releases/download/v${version}/gost-linux-amd64-${version}.gz --no-check-certificate
-file=$(ls | grep gost-linux-amd64-)
-gunzip ${file} || gzip ${file}
-mv gost-linux-amd64-${version} /usr/local/bin/gost || mv gost-linux-${version}.gz /usr/local/bin/gost
+wget -O gost_${version}_linux_amd64.tar.gz https://github.com/ginuerzh/gost/releases/download/v${version}/gost_${version}_linux_amd64.tar.gz --no-check-certificate
+file=gost_${version}_linux_amd64.tar.gz
+tar -zxvf ${file}
+mv gost /usr/local/bin/gost
 chmod +x /usr/local/bin/gost
 
 read -p "请输入socks5用户名:" user
